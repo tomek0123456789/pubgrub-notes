@@ -1,28 +1,29 @@
 1. Dodaj konflikt na twojej paczce (tzn. tej, którą piszesz) oznaczającą, że dana wersja musi zostać wybrana (np. `{not my-package 1.0.0}`). Zauważ, że pomimo tego, że mamy właściwie tylko jedną wersję swojej paczki (obecną), to jest to konflikt, a nie przypisanie wersji.
 2. Przypisz swoją paczkę do `next`
 3. W pętli:
-- [[pubgrub/działanie#Unit propagation|Unit propagation]] na `next`, żeby znaleźć kolejne konflikty
-	- Jeśli to spowoduje, że jakaś [[definicje#^incompatibility-rules|niezgodność zostanie spełniona]], mamy konflikt. Unit propagation spróbuje go rozwiązać - jeśli się to nie uda, zostaje zwrócony error.
-- Gdy nie ma już żadnych wyprowadzeń, [[#Decision making|podejmij decyzję]] i ustaw `next` na nazwę paczki, która wybrana przez *decision making*. Weź pod uwagę, że pierwsza decyzja zawsze wybierze jedyną możliwą wersję twojej paczki
+- [Unit propagation](działanie.md#unit-propagation) na `next`, żeby znaleźć kolejne konflikty
+	- Jeśli to spowoduje, że jakaś [niezgodność zostanie spełniona](definicje.md#L84), mamy konflikt. Unit propagation spróbuje go rozwiązać - jeśli się to nie uda, zostaje zwrócony error.
+- Gdy nie ma już żadnych wyprowadzeń, [podejmij decyzję](działanie.md#decision-making) i ustaw `next` na nazwę paczki, która wybrana przez *decision making*. Weź pod uwagę, że pierwsza decyzja zawsze wybierze jedyną możliwą wersję twojej paczki
 	- Podejmowanie decyzji może stwierdzić, że nie ma więcej pracy do wykonania - wtedy częściowe rozwiązanie jest końcowym rozwiązaniem - kończymy algorytm
 
 
 ### Unit propagation
 
-Łączy [[definicje#częściowe rozwiązanie (*partial solution*)|partial solution]] ze znanymi [[definicje#niezgodność (*incompatibility*)|niezgodnościami]], żeby wyciągnąć nowe [[definicje#^assignment|przypisania (assignments)]]. 
-Biorąc jakąś niezgodność `t`, która dla jednego termu jest [[definicje#^term-inconclusive|nierozstrzygalna (inconclusive)]] w całym rozwiązaniu częściowym, oznacza to, że musimy zaprzeczyć `t`. Dodajemy zatem `not t` do częściowego rozwiązania.
+Łączy [partial solution](definicje.md#częściowe-rozwiązanie-partial-solution) ze znanymi [niezgodnościami (incompatibilities)](definicje.md#niezgodność-incompatibility), żeby wyciągnąć nowe [przypisania (assignments)](definicje.md#L91). 
+Biorąc jakąś niezgodność `t`, która dla jednego termu jest [nierozstrzygalna (inconclusive)](definicje.md#L31) w całym rozwiązaniu częściowym, oznacza to, że musimy zaprzeczyć `t`. Dodajemy zatem `not t` do częściowego rozwiązania.
 
 ==TODO zrozumieć to wyżej==
 
-Gdy szukamy niezgodności z jednym nierozstrzygalnym termem możemy natrafić na niezgodność, która jest  przez dane częściowe rozwiązanie. 
->[!EXAMPLE] Przykład
+Gdy szukamy niezgodności z jednym nierozstrzygalnym termem, możemy natrafić na niezgodność, która jest przez dane częściowe rozwiązanie. 
+>[!NOTE]
+> Przykład
 >==TODO dodać przykład na to==
 
 
-Jeśli tak się stanie, to wiemy, że obecne częściowe rozwiązanie nie jest w stanie wyprodukować dobrego ogólnego rozwiązania (z [[definicje#niezgodność (*incompatibility*)|definicji niezgodności]])
+Jeśli tak się stanie, to wiemy, że obecne częściowe rozwiązanie nie jest w stanie wyprodukować dobrego ogólnego rozwiązania (z [definicji niezgodności (incompatibility)](definicje.md#niezgodność-incompatibility))
 
 
-Jeśli podczas szukania niezgodności z nierozstrzygalnym termem trafimy na taką, która jest [[definicje#^incompatibility-satisfies|spełniana]] przez obecne częściowe rozwiązanie, to wiemy, że jest złe i robimy [[#Conflict resolution|conflict resolution]]. Zwraca error albo cofa się w częściowym rozwiązaniu i zwraca inną niezgodność, która reprezentuje oryginalną przyczynę konfliktu, np.:
+Jeśli podczas szukania niezgodności z nierozstrzygalnym termem trafimy na taką, która jest [spełniana](definicje.md#L76) przez obecne częściowe rozwiązanie, to wiemy, że jest złe i robimy [conflict resolution](#conflict-resolution). Zwraca error albo cofa się w częściowym rozwiązaniu i zwraca inną niezgodność, która reprezentuje oryginalną przyczynę konfliktu, np.:
 
 - mamy `{a ^1.0.0, b ^2.0.0}`
 - wybieramy w trakcie *unit propagation* `a 1.2.3` i `b 2.3.4` 
@@ -43,19 +44,19 @@ Niezgodności są indeksowane po nazwach paczek, do których się odnoszą i ite
 - Przypisz zbiór zawierający nazwę przetwarzanej paczki do 🧺`changed` 
 - Dopóki 🧺`changed` nie jest puste:
 - Usuń element z 🧺`changed`, przypisz do 📦`package`
-- Dla każdego ⚡️`incompatibility`, która odnosi się do 📦`package` od najnowszej do najstarszej (bo [[#Conflict resolution)|conflict resolution]] przeważnie produkuje więcej ogólnych niezgodności później):
-	- Jeśli ⚡️`incompatibility` jest [[definicje#^incompatibility-satisfies|spełnione (satisfies)]] przez częściowe rozwiązanie:
-		- [[#Conflict resolution|conflict resolution]] na ⚡️`incompatibility`. Jeśli się uda, zwraca niezgodność, która na pewno jest [[definicje#^incompatibility-almost-satisfies|prawie spełnialna]] - nazwijmy ją `term`
+- Dla każdego ⚡️`incompatibility`, która odnosi się do 📦`package` od najnowszej do najstarszej (bo [conflict resolution](#conflict-resolution) przeważnie produkuje więcej ogólnych niezgodności później):
+	- Jeśli ⚡️`incompatibility` jest [spełnione (satisfies)](definicje.md#L76) przez częściowe rozwiązanie:
+		- [conflict resolution](#conflict-resolution) na ⚡️`incompatibility`. Jeśli się uda, zwraca niezgodność, która na pewno jest [prawie spełnialna (almost satisfied)](definicje.md#L80) - nazwijmy ją `term`
 		- dodajemy `not term` do częściowego rozwiązania z ⚡️`incompatibility` jako jego przyczynę
 		- zamieniamy 🧺`changed` na zbiór zawierający tylko nazwę paczki `term`
-	- jeśli ⚡️`incompatibility` jest [[definicje#^incompatibility-almost-satisfies|prawie spełnione (almost satisfies)]]:
+	- jeśli ⚡️`incompatibility` jest [prawie spełnione (almost satisfies)](definicje.md#L80):
 		- przypisz ten jeden niespełniony term jako `term`
 		- dodaj `not term` do częściowego rozwiązania z ⚡️`incompatibility` jako przyczynę
 		- dodaj nazwę paczki `term` do 🧺`changed`
 
 ### Conflict resolution
 
-Kiedy niezgodność [[definicje#^incompatibility-satisfies|jest spełniona]] przez częściowe rozwiązanie, to oznacza, że obecne częściowe rozwiązanie nie jest podzbiorem głównego rozwiązania - czyli po prostu nie działa. Proces cofania się z tego stanu nazwany jest *conflict resolution (rozwiązywanie konfliktów)*.
+Kiedy niezgodność [jest spełniona (satisfies)](definicje.md#L76) przez częściowe rozwiązanie, to oznacza, że obecne częściowe rozwiązanie nie jest podzbiorem głównego rozwiązania - czyli po prostu nie działa. Proces cofania się z tego stanu nazwany jest *conflict resolution (rozwiązywanie konfliktów)*.
 
 Główna zasada w rozwiązywaniu konfliktów to [*rezolucja*](https://pl.wikipedia.org/wiki/Rezolucja_(matematyka)), która w tym przypadku sprowadza się do:
 
@@ -70,11 +71,11 @@ Można to zgeneralizować: ^generalized-resolution
 - albo `t1` albo `t2` jest spełnione w każdym rozwiązaniu, w którym `t1 ∪ t2` jest spełnione 
 - można wywnioskować  z tego `{q, r, t1 ∪ t2}`
 
-Redukujemy to do `{q, r}`w każdym przypadku, gdzie `not t2 ⊆ t1` (to jest, gdzie `not t2` spełnia `t1`), wliczając przypadek gdzie `t1 = t` i `t2 = not t`[[pubgrub/działanie#^conflict-resolution-rule|(czyli oryginalny przypadek)]].
+Redukujemy to do `{q, r}`w każdym przypadku, gdzie `not t2 ⊆ t1` (to jest, gdzie `not t2` spełnia `t1`), wliczając przypadek gdzie `t1 = t` i `t2 = not t`[(czyli oryginalny przypadek)](działanie.md#L66).
 
 Służy to opisaniu *wcześniejszej przyczyny* - niezgodności o krok bliżej pierwotnej przyczyny. Znajdujemy ją poprzez znalezienie najwcześniejszego przypisania `x`, które w pełni spełnia niezgodność, z którą mamy konflikt. Na `x` oraz na jej przyczynie wykonujemy [[#^generalized-resolution|zgeneralizowaną rezolucję]]. Z tego dostajemy nową niezgodność, która jest naszą *wcześniejszą przyczyną*.
 
-> [!EXAMPLE] Przykład
+> [!NOTE] Przykład
 > ==TODO==
 
 W ten sposób jesteśmy w stanie znaleźć główną (*root*) przyczynę wykonując tę procedurę aż:
@@ -99,15 +100,15 @@ Algorytm (w pętli):
 > Poziom decyzji 1 to poziom, na którym główna (*root*) paczka została wybrana. Bezpieczniej wrócić do poziomu 0, ale zatrzymywanie się na poziomie 1 zwykle generuje lepsze error message, bo referencje do głównej paczki są bliżej wniosku, że nie istnieje żadne rozwiązanie.
 
 - if `satisfier` jest decyzją || `previousSatisfierLevel` jest inny, niż poziom decyzji `satisfier`:
-	- jeśli `incompatibility` jest inne, niż początkowy input - dodaj je do *solver's incompatibility set* (jeśli konfliktująca niezgodność była dodana leniwie podczas [[#^decision making|podejmowania decyzji]], może nie mieć wyraźnej/jednoznacznej pierwotnej przyczyny)
+	- jeśli `incompatibility` jest inne, niż początkowy input - dodaj je do *solver's incompatibility set* (jeśli konfliktująca niezgodność była dodana leniwie podczas [podejmowania decyzji](#decision-making), może nie mieć wyraźnej/jednoznacznej pierwotnej przyczyny)
 	- backtrack - usuwaj wszystkie przypisania, których *decision level* jest większy, niż `previousSatisfierLevel` z częściowego rozwiązania
 	- zwróć `incompatibility`
 - else, `priorCause` to suma mnogościowa termów w niezgodności i termów w przyczynie `satisfier` minut termy odnoszące się do paczki `satisfier`
 >[!NOTE] Uwaga
-Odpowiada to wywnioskowanej niezgodności `{q, r}` z [[#^conflict-resolution-rule|przykładu wyżej]]
+Odpowiada to wywnioskowanej niezgodności `{q, r}` z [przykładu wyżej](działanie.md#L66)
 - if `satisfier` nie spełnia `term`, dodaj `not (satisfier \ term)` do `priorCause`
 > [!NOTE] Uwaga
-> `not (satisfier \ term)` odpowiada `t1 ∪ t2` w [[#^generalized-resolution|zgereralizowanej zasadzie]], gdzie `term = t1` i `satisfier = not t2`, z własności `(Sᶜ \ T)ᶜ = S ∪ T`.
+> `not (satisfier \ term)` odpowiada `t1 ∪ t2` w [zgereralizowanej zasadzie](działanie.md#L69), gdzie `term = t1` i `satisfier = not t2`, z własności `(Sᶜ \ T)ᶜ = S ∪ T`.
 - przypisz `incompatibility` do `priorCause`
 
 ### Decision making
@@ -150,7 +151,7 @@ Zwracanie błędów dlaczego się nie udało trudne z tego samego powodu, dla kt
 
 Struktura algorytmu ułatwia wyjaśnianie najbardziej zawiłych przypadków dzięki śledzeniu głównych przyczyn niezgodności (*root-cause tracking*) - **ponieważ wyprowadza nowe niezgodności za każdym razem, gdy natrafi na konflikt, to automatycznie generuje łańcuch wyprowadzeń, który ostatecznie wyprowadza to, że rozwiązanie nie istnieje.**
 
-Gdy [[#Conflict resolution|conflict resolution]] zawodzi, tworzy niezgodność z jednym pozytywnym termem - główną paczką - główna paczka nie jest częścią rozwiązania - nie ma rozwiązania. Do pokazania dlaczego stosujemy [[definicje#graf wnioskowania (*derivation graph*)|graf wnioskowania]].
+Gdy [conflict resolution](#conflict-resolution) zawodzi, tworzy niezgodność z jednym pozytywnym termem - główną paczką - główna paczka nie jest częścią rozwiązania - nie ma rozwiązania. Do pokazania dlaczego stosujemy [graf wnioskowania](definicje.md#graf-wnioskowania-derivation-graph).
 
 Można łatwo z niego wyciągnąć przyczyny każdej niezgodności, ale może to prowadzić do zbyt rozwlekłych informacji, np.:
 > ... And, because `root` depends on `foo ^1.0.0`, `root` requires `baz ^3.0.0`. So, because `root` depends on `baz ^1.0.0`, `root` isn't valid and version solving has failed.
@@ -210,11 +211,11 @@ Działanie algorytmu:
 	- 1️⃣ *if* obydwie przyczyny mają przypisane sobie numery linii:
 		- Wypisz *Because `cause1` (`cause1.line`) and `cause2` (`cause2.line`), `incompatibility`.*
 	- 2️⃣ *else if* tylko jedna przyczyna ma przypisany numer linii:
-		- Rekurencyjnie wywołaj [[#Error reporting]] (czyli ten algorytm) na przyczynie bez numeru
+		- Rekurencyjnie wywołaj [Error reporting](działanie.md#error-reporting-) (czyli ten algorytm) na przyczynie bez numeru
 		- przyczyna z numerem = `cause`
 		- Wypisz "*And because `cause` (`cause.line`), `incompatibility`.*"
 	- 3️⃣ *else* (`cause1` i `cause2` nie mają numerów linii):
-		- 🅰️ *if* przynajmniej jedna z niezgodności jest spowodowana dwoma [[definicje#^external|zewnętrznymi (external) niezgodnościami]]:
+		- 🅰️ *if* przynajmniej jedna z niezgodności jest spowodowana dwoma [zewnętrznymi (external) niezgodnościami](definicje.md#L66):
 			- 
 		- 🅱️
 
