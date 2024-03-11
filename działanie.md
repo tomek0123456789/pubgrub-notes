@@ -10,9 +10,9 @@
 ### Unit propagation
 
 Łączy [partial solution](definicje.md#częściowe-rozwiązanie-partial-solution) ze znanymi [niezgodnościami (incompatibilities)](definicje.md#niezgodność-incompatibility), żeby wyciągnąć nowe [przypisania (assignments)](definicje.md#L91). 
-Biorąc jakąś niezgodność `t`, która dla jednego termu jest [nierozstrzygalna (inconclusive)](definicje.md#L31) w całym rozwiązaniu częściowym, oznacza to, że musimy zaprzeczyć `t`. Dodajemy zatem `not t` do częściowego rozwiązania.
+Biorąc jakąś niezgodność `t`, która dla jednego termu jest [nierozstrzygalna (inconclusive)](definicje.md#L32) w całym rozwiązaniu częściowym, oznacza to, że musimy zaprzeczyć `t`. Dodajemy zatem `not t` do częściowego rozwiązania.
 
-==TODO zrozumieć to wyżej==
+
 
 Gdy szukamy niezgodności z jednym nierozstrzygalnym termem, możemy natrafić na niezgodność, która jest przez dane częściowe rozwiązanie. 
 >[!NOTE]
@@ -23,7 +23,7 @@ Gdy szukamy niezgodności z jednym nierozstrzygalnym termem, możemy natrafić n
 Jeśli tak się stanie, to wiemy, że obecne częściowe rozwiązanie nie jest w stanie wyprodukować dobrego ogólnego rozwiązania (z [definicji niezgodności (incompatibility)](definicje.md#niezgodność-incompatibility))
 
 
-Jeśli podczas szukania niezgodności z nierozstrzygalnym termem trafimy na taką, która jest [spełniana](definicje.md#L76) przez obecne częściowe rozwiązanie, to wiemy, że jest złe i robimy [conflict resolution](#conflict-resolution). Zwraca error albo cofa się w częściowym rozwiązaniu i zwraca inną niezgodność, która reprezentuje oryginalną przyczynę konfliktu, np.:
+Jeśli podczas szukania niezgodności z nierozstrzygalnym termem trafimy na taką, która jest [spełniana](definicje.md#L84) przez obecne częściowe rozwiązanie, to wiemy, że jest złe i robimy [conflict resolution](#conflict-resolution). Zwraca error albo cofa się w częściowym rozwiązaniu i zwraca inną niezgodność, która reprezentuje oryginalną przyczynę konfliktu, np.:
 
 - mamy `{a ^1.0.0, b ^2.0.0}`
 - wybieramy w trakcie *unit propagation* `a 1.2.3` i `b 2.3.4` 
@@ -216,7 +216,6 @@ Działanie algorytmu:
 		- Wypisz "*And because `cause` (`cause.line`), `incompatibility`.*"
 	- 3️⃣ *else* (`cause1` i `cause2` nie mają numerów linii):
 		- 🅰️ *if* przynajmniej jedna z niezgodności jest spowodowana dwoma [zewnętrznymi (external) niezgodnościami](definicje.md#L66):
-			- 
 		- 🅱️
 
 

@@ -18,19 +18,19 @@ Dla przykładu drugiego (`not bar ^1.0.0`)
 Dodatkowo, mamy 3 zasady:
 
 1. Zbiór termów $S$ **spełnia** (satisfies) term $t$ gdy $t$ jest spełnione gdy każdy term w $S$ jest spełniony. 
-> [!NOTE]
+
 > Przykład 
    > zbiór $S$ `{foo >=1.0.0, foo <2.0.0}` spełnia term $t$ `foo ^1.0.0` ^term-satisfies
 
 2. Zbiór termów $S$ **nie spełnia termu** (contradicts) $t$, gdy każdy term w $S$ jest spełniony, a $t$ jest niespełnione
-> [!NOTE]
+
 > Przykład  
    > zbiór $S$ `foo ^1.5.0` (inaczej `{foo ^1.5.0}`) nie spełnia termu $t$ `not foo ^1.0.0` 
 
 Każda wersja spełniająca $S$, czyli wersje `{foo >=1.5.0, <2.0.0}` są sprzeczne z wersjami $t$ (`foo <1.0.0` lub niewybranie żadnej wersji paczki))
     
 3. Gdy 1. i 2. nie zachodzą, $S$ jest **nierozstrzygalny** (inconclusive) dla termu $t$
-> [!NOTE]
+
 > Przykład 
 > zbiór $S$ `foo ^1.0.0` jest nierozstrzygalny dla $t$ `foo ^1.5.0` 
 
@@ -38,28 +38,27 @@ Wersje `>=1.0.0, <1.5.0` spełniają $S$, nie spełniają $t$; wersje `>=1.5.0, 
 
 Termy mogą być traktowane jako zbiory dozwolonych wersji, gdzie ich negacja to dopełnienie tego zbioru. Działania i relacje na zbiorach też mogą być zdefiniowane, np.:
 - `foo ^1.0.0 ∪ foo ^2.0.0` to `foo >=1.0.0 <3.0.0`.
-> [!NOTE]
+
 > Przykład 
 > `foo ^1.0.0 -> {foo ^1.0.0} -> {foo >=1.0.0, <2.0.0}`
 > `foo ^2.0.0 -> {foo ^2.0.0} -> {foo >=2.0.0, <3.0.0}`
 > suma daje ciągłość w `2.0.0`, stąd `>=1.0.0, <3.0.0`
 - `foo >=1.0.0 ∩ not foo >=2.0.0` to `foo ^1.0.0`.
-> [!NOTE]
+
 > Przykład 
 > `not foo >=2.0.0 -> foo <2.0.0`
 > część wspólna daje `foo ^1.0.0`
 - `foo ^1.0.0 \ foo ^1.5.0` to `foo >=1.0.0 <1.5.0`.
-> [!NOTE]
+
 > Przykład 
 > usunięcie `foo >=1.5.0` z `foo ^1.0.0`
 
 Z tego mamy dwa wnioski:
-1. $S$ spełnia $t$ $\iff$ $\bigcap S \subseteq t$
-> [!NOTE]
+
+1. $S$ **spełnia** $t$ $\iff$ $\bigcap S \subseteq t$
 > Przykład 
    >==TODO dodać przykład==
-2. $S$ nie spełnia $t \iff \bigcap S$ jest rozłączne z $t$
-> [!NOTE]
+2. $S$ **nie spełnia** $t \iff \bigcap S$ jest rozłączne z $t$
 > Przykład 
    >==TODO dodać przykład==
    
@@ -100,7 +99,7 @@ Służy do określenia, jak daleko mamy się cofnąć, żeby znaleźć główną
 ##### graf wnioskowania (*derivation graph*)
 
 Skierowany, acykliczny graf binarny (czyli właściwie drzewo, tylko odwrócone). 
-Liście (wierzchołki, do których nie wchodzą krawędzie) to [zewnętrzne (external) niezgodności](działanie.md#L75), wierzchołki wewnętrzne (czyli pozostałe) to [wywnioskowane (derived) niezgodności](działanie.md#L76).
+Liście (wierzchołki, do których nie wchodzą krawędzie) to [zewnętrzne (external) niezgodności](definicje.md#L75), wierzchołki wewnętrzne (czyli pozostałe) to [wywnioskowane (derived) niezgodności](definicje.md#L76).
 
 Liście: 1, 2, 4, 6
 Wewnętrzne: 3, 5, 7
